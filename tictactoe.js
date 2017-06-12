@@ -35,9 +35,18 @@ function printBoard() {
   ' ' + board[7] + ' | ' + board[8] + ' | ' + board[9] + '\n');
 }
 
+const possibleWins = [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9'], ['1', '4', '7'], ['2', '5', '8'],
+['3','6','9'], ['1','5','9'], ['3','5','7']];
+
 function checkWinner(player) {
-  
-}
+  function checkMark(loc) {
+    return board[loc] === player;
+  }
+  function checkMarks(array) {
+    return array.every(checkMark);
+  }
+  return (possibleWins.some(checkMarks));
+};
 
 function makeMove(player) {
   prompt.start();
@@ -48,18 +57,15 @@ function makeMove(player) {
     }
     console.log('Player ' + player + ' has selected location ' + result[askMove]);
     markBoard(result[askMove], player);
-    printBoard();
-    changeTurns(player);
-    makeMove(currentPlayer);
+    if (checkWinner()) {
+      console.log('Congratulations! Player ' + player + ' wins!!!');
+    } else {
+      printBoard();
+      changeTurns(player);
+      makeMove(currentPlayer);
+    }
   });
 };
 
 printBoard();
 makeMove('X');
-
-// console.log('Game started: \n' +
-//     ' 1 | 2 | 3 \n' +
-//     ' --------- \n' +
-//     ' 4 | 5 | 6 \n' +
-//     ' --------- \n' +
-//     ' 7 | 8 | 9 \n');

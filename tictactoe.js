@@ -35,6 +35,10 @@ function printBoard() {
   ' ' + board[7] + ' | ' + board[8] + ' | ' + board[9] + '\n');
 }
 
+function checkWinner(player) {
+  
+}
+
 function makeMove(player) {
   prompt.start();
   const askMove = ['Where would you like to move, Player ' + player + '?'];

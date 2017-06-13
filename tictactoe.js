@@ -38,6 +38,24 @@ function printBoard() {
 const possibleWins = [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9'], ['1', '4', '7'], ['2', '5', '8'],
 ['3','6','9'], ['1','5','9'], ['3','5','7']];
 
+function checkMove(location, player, callback) {
+  let result = true;
+  let locations = Object.keys(board);
+  function checkChar() {
+    if (!locations.includes(location)) {
+      result = 'UH-OH! You must select a space 1 - 9! Please select again.';
+    }
+  }
+  function checkSpace() {
+    if (board[location] === 'X' || board[location] === 'O') {
+      result = 'UH-OH! That space is already taken! Please select again.';
+    }
+  }
+  checkChar();
+  checkSpace();
+  callback(result);
+}
+
 function checkWinner(player, callback) {
   let bool = false;
   for (let i = 0; i < possibleWins.length; i++) {
@@ -55,15 +73,23 @@ function makeMove(player) {
       console.log(err);
     }
     console.log('Player ' + player + ' has selected location ' + result[askMove]);
-    markBoard(result[askMove], player);
-    checkWinner(player, function(res) {
-      if (res === false) {
-        printBoard();
-        changeTurns(player);
-        makeMove(currentPlayer);
+    checkMove(result[askMove], player, (response) => {
+      if (response === true) {
+        markBoard(result[askMove], player);
+        checkWinner(player, (res) => {
+          if (res === false) {
+            printBoard();
+            changeTurns(player);
+            makeMove(currentPlayer);
+          } else {
+            printBoard();
+            console.log('Congratulations! Player ' + player + ' wins!!!');
+          }
+        })
       } else {
+        console.log(response);
         printBoard();
-        console.log('Congratulations! Player ' + player + ' wins!!!');
+        makeMove(player);
       }
     })
   });

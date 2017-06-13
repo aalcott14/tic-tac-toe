@@ -38,14 +38,13 @@ function printBoard() {
 const possibleWins = [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9'], ['1', '4', '7'], ['2', '5', '8'],
 ['3','6','9'], ['1','5','9'], ['3','5','7']];
 
-function checkWinner(player) {
-  function checkMark(loc) {
-    return board[loc] === player;
+function checkWinner(player, callback) {
+  let bool = false;
+  for (let i = 0; i < possibleWins.length; i++) {
+    let combo = possibleWins[i].map(loc => board[loc]);
+    JSON.stringify(combo) === JSON.stringify([player, player, player]) ? bool = true : null;
   }
-  function checkMarks(array) {
-    return array.every(checkMark);
-  }
-  return (possibleWins.some(checkMarks));
+  callback(bool);
 };
 
 function makeMove(player) {
@@ -57,13 +56,16 @@ function makeMove(player) {
     }
     console.log('Player ' + player + ' has selected location ' + result[askMove]);
     markBoard(result[askMove], player);
-    if (checkWinner()) {
-      console.log('Congratulations! Player ' + player + ' wins!!!');
-    } else {
-      printBoard();
-      changeTurns(player);
-      makeMove(currentPlayer);
-    }
+    checkWinner(player, function(res) {
+      if (res === false) {
+        printBoard();
+        changeTurns(player);
+        makeMove(currentPlayer);
+      } else {
+        printBoard();
+        console.log('Congratulations! Player ' + player + ' wins!!!');
+      }
+    })
   });
 };
 
